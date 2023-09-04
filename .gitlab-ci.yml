@@ -1,0 +1,35 @@
+image: node:latest
+
+stages:
+  - test
+  - build
+  - deploy
+
+# cache:
+#   paths:
+#     - frontend/node_modules/
+
+frontend_test:
+  stage: test
+  script:
+    - cd frontend
+    - npm install
+    - npm test
+
+frontend_build:
+  stage: build
+  script:
+    - cd frontend
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - frontend/dist/
+
+frontend_deploy:
+  stage: deploy
+  script:
+    - npm install -g vercel
+    - vercel ./frontend/dist --token FCy6xZcpph0Gs7VsJVf8T44U --prod --confirm --name commodity-exchange-fintech
+  only:
+    - main
