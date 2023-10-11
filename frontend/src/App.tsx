@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
-import { Avatar, Button, Typography } from '@mui/material'
+import { Avatar, Button, LinearProgress, Typography } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip'
 import { BarChart, LineChart } from 'echarts/charts'
 import {
@@ -14,16 +14,15 @@ import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { observer } from 'mobx-react-lite'
 import { useEffect } from 'react'
+import Marquee from 'react-fast-marquee'
 import gce from '../public/icon.svg'
-import chinaImage from './assets/china.png'
-import indiaImage from './assets/india.png'
-import russiaImage from './assets/russia.png'
-import slider from './assets/slider.png'
 import swapImage from './assets/swap.png'
 import { Balances } from './components/balance/Balances'
+import { Plate } from './components/marquee/Plate'
 import { AdditionalIcons } from './components/menu/AdditionalIcons'
 import { Icons } from './components/menu/Icons'
 import { Menu } from './components/menu/Menu'
+import { Order } from './components/transaction/Order'
 import { Transaction } from './components/transaction/Transaction'
 import { Chart } from './components/widgets/Chart'
 import { PieChart } from './components/widgets/PieChart'
@@ -42,167 +41,178 @@ echarts.use([
 export default observer(() => {
   const { userStore } = useStore()
 
-  const { currentBalance, transactionHistory, fetchGoldPrice } = userStore
+  const {
+    countrySupply,
+    currentBalance,
+    transactionHistory,
+    fetchGoldPrice,
+    ordersHistory,
+    operationStatus,
+  } = userStore
 
   useEffect(() => {
     fetchGoldPrice()
   }, [])
 
   return (
-    <StyledAppContainer>
-      <StyleLeftSideContainer>
-        <StyledProfileInfo>
-          <StyledProfileContainer>
-            <Avatar sx={{ bgcolor: '#BFBFBF', width: 54, height: 54 }}>
-              <PersonOutlineIcon />
-            </Avatar>
-            <StyledProfileTextContainer>
-              <StyledProfileTitle>ООО “Российский импортер”</StyledProfileTitle>
-              <StyledProfileSubtext>Кошелек 0x66...c7e5</StyledProfileSubtext>
-            </StyledProfileTextContainer>
-          </StyledProfileContainer>
-          <Balances />
-        </StyledProfileInfo>
-        <Tooltip title="Обмен через пулл ликвидности будет доступен позже">
-          <StyledSwapContainer>
-            <StyledSwapTitleContainer>
-              <StyledBalanceTitle>Обмен ТТ</StyledBalanceTitle>
-              <SettingsOutlinedIcon />
-            </StyledSwapTitleContainer>
-            <img src={swapImage} />
-            <StyledButton disabled variant="contained">
-              Обменять токены
-            </StyledButton>
-          </StyledSwapContainer>
-        </Tooltip>
-      </StyleLeftSideContainer>
-      <StyledFeed>
-        <StyledTop>Главная страница</StyledTop>
-        <StyledPreferredContentContainer>
-          <StyledPreferredContent>
-            <StyledCountryTitleContainer>
-              <StyledCountryTitle>
-                Китай <StyledCountryImage src={chinaImage} />
-              </StyledCountryTitle>
-              <Menu />
-            </StyledCountryTitleContainer>
-            <StyledCountryDataContainer>
-              <StyledRow>
-                <StyledCountryDataText>ТТК в обращении:</StyledCountryDataText>
-                <StyledCountryDataText>123 456</StyledCountryDataText>
-              </StyledRow>
-              <StyledRow>
-                <StyledCountryDataText>Активные ноды:</StyledCountryDataText>
-                <StyledCountryDataText>11</StyledCountryDataText>
-              </StyledRow>
-            </StyledCountryDataContainer>
-          </StyledPreferredContent>
-          <StyledPreferredContent>
-            <StyledCountryTitleContainer>
-              <StyledCountryTitle>
-                Индия <StyledCountryImage src={indiaImage} />
-              </StyledCountryTitle>
-              <Menu />
-            </StyledCountryTitleContainer>
-            <StyledCountryDataContainer>
-              <StyledRow>
-                <StyledCountryDataText>ТТК в обращении:</StyledCountryDataText>
-                <StyledCountryDataText>251 012</StyledCountryDataText>
-              </StyledRow>
-              <StyledRow>
-                <StyledCountryDataText>Активные ноды:</StyledCountryDataText>
-                <StyledCountryDataText>4</StyledCountryDataText>
-              </StyledRow>
-            </StyledCountryDataContainer>
-          </StyledPreferredContent>
-          <StyledPreferredContent>
-            <StyledCountryTitleContainer>
-              <StyledCountryTitle>
-                Россия <StyledCountryImage src={russiaImage} />
-              </StyledCountryTitle>
-              <Menu />
-            </StyledCountryTitleContainer>
-            <StyledCountryDataContainer>
-              <StyledRow>
-                <StyledCountryDataText>ТТК в обращении:</StyledCountryDataText>
-                <StyledCountryDataText>456 083</StyledCountryDataText>
-              </StyledRow>
-              <StyledRow>
-                <StyledCountryDataText>Активные ноды:</StyledCountryDataText>
-                <StyledCountryDataText>7</StyledCountryDataText>
-              </StyledRow>
-            </StyledCountryDataContainer>
-          </StyledPreferredContent>
-        </StyledPreferredContentContainer>
-        <StyledMainContentContainer>
-          <StyledChartContainer>
-            <Chart />
-            <PieChart />
-          </StyledChartContainer>
-        </StyledMainContentContainer>
-        <StyledBottomContainer>
-          <StyledTransactionsHistory>
-            <StyledTransactionsHistoryTitleContainer>
-              <StyledTransactionsHistoryTitle>
-                История транзакций
-              </StyledTransactionsHistoryTitle>
-              <Menu />
-            </StyledTransactionsHistoryTitleContainer>
-            <StyledDateContainer>
-              <StyledBalanceAmount>
-                {currentBalance.toLocaleString('ru-RU')} ₽
-              </StyledBalanceAmount>
-              <StyledSelectDate>
-                Август 2023
-                <KeyboardArrowDownIcon />
-              </StyledSelectDate>
-            </StyledDateContainer>
-            {transactionHistory.map(
-              ({ type, amountToken, tokenName, amountFiat, from }) => {
-                return (
-                  <Transaction
-                    type={type}
-                    amountToken={amountToken}
-                    amountFiat={amountFiat}
-                    tokenName={tokenName}
-                    from={from}
-                  />
-                )
-              },
-            )}
-          </StyledTransactionsHistory>
-          <StyledBottomBlock>
-            <img height="300" width="100%" src={slider} />
-          </StyledBottomBlock>
-        </StyledBottomContainer>
-      </StyledFeed>
-      <StyledSidebar>
-        <img height="35px" src={gce} />
-        <StyledIconsBlock>
-          <Icons />
-        </StyledIconsBlock>
-        <StyledIconsBlock>
-          <AdditionalIcons />
-        </StyledIconsBlock>
-      </StyledSidebar>
-    </StyledAppContainer>
+    <>
+      {operationStatus === 'sending' && <StyledLinearProgress />}
+      <StyledAppContainer>
+        <StyleLeftSideContainer>
+          <StyledProfileInfo>
+            <StyledProfileContainer>
+              <Avatar sx={{ bgcolor: '#BFBFBF', width: 54, height: 54 }}>
+                <PersonOutlineIcon />
+              </Avatar>
+              <StyledProfileTextContainer>
+                <StyledProfileTitle>
+                  ООО “Российский импортер”
+                </StyledProfileTitle>
+                <StyledProfileSubtext>Кошелек 0x66...c7e5</StyledProfileSubtext>
+              </StyledProfileTextContainer>
+            </StyledProfileContainer>
+            <Balances />
+          </StyledProfileInfo>
+          <Tooltip title="Обмен через пулл ликвидности будет доступен позже">
+            <StyledSwapContainer>
+              <StyledSwapTitleContainer>
+                <StyledBalanceTitle>Обмен ТТ</StyledBalanceTitle>
+                <SettingsOutlinedIcon />
+              </StyledSwapTitleContainer>
+              <img src={swapImage} />
+              <StyledButton disabled variant="contained">
+                Обменять токены
+              </StyledButton>
+            </StyledSwapContainer>
+          </Tooltip>
+        </StyleLeftSideContainer>
+        <StyledFeed>
+          <StyledTop>Главная страница</StyledTop>
+          <StyledPreferredContentContainer>
+            <StyledPreferredContent>
+              <StyledCoursesTitle>Курс ТТ</StyledCoursesTitle>
+              <Marquee autoFill pauseOnHover direction="left">
+                {countrySupply.map(props => (
+                  <Plate {...props} />
+                ))}
+              </Marquee>
+            </StyledPreferredContent>
+          </StyledPreferredContentContainer>
+          <StyledMainContentContainer>
+            <StyledChartContainer>
+              <Chart />
+              <PieChart />
+            </StyledChartContainer>
+          </StyledMainContentContainer>
+          <StyledBottomContainer>
+            <StyledTransactionsHistory>
+              <StyledTransactionsHistoryTitleContainer>
+                <StyledTransactionsHistoryTitle>
+                  История транзакций
+                </StyledTransactionsHistoryTitle>
+                <Menu />
+              </StyledTransactionsHistoryTitleContainer>
+              <StyledDateContainer>
+                <StyledBalanceAmount>
+                  {currentBalance.toLocaleString('ru-RU')} ₽
+                </StyledBalanceAmount>
+                <StyledSelectDate>
+                  Август 2023
+                  <KeyboardArrowDownIcon />
+                </StyledSelectDate>
+              </StyledDateContainer>
+              {transactionHistory.map(
+                ({ type, amountToken, tokenName, amountFiat, from }) => {
+                  return (
+                    <Transaction
+                      type={type}
+                      amountToken={amountToken}
+                      amountFiat={amountFiat}
+                      tokenName={tokenName}
+                      from={from}
+                    />
+                  )
+                },
+              )}
+            </StyledTransactionsHistory>
+            <StyledTransactionsHistory>
+              <StyledTransactionsHistoryTitleContainer>
+                <StyledTransactionsHistoryTitle>
+                  История заказов
+                </StyledTransactionsHistoryTitle>
+                <Menu />
+              </StyledTransactionsHistoryTitleContainer>
+
+              <StyledHeaderContainer>
+                <StyledHeaderTitle>Номер заказа</StyledHeaderTitle>
+                <StyledHeaderTitle>Статус</StyledHeaderTitle>
+                <StyledHeaderTitle>Прогресс</StyledHeaderTitle>
+                <StyledHeaderTitle>Сумма</StyledHeaderTitle>
+              </StyledHeaderContainer>
+
+              {ordersHistory.map((props: any) => (
+                <Order {...props} />
+              ))}
+            </StyledTransactionsHistory>
+          </StyledBottomContainer>
+        </StyledFeed>
+        <StyledSidebar>
+          <img height="35px" src={gce} />
+          <StyledIconsBlock>
+            <Icons />
+          </StyledIconsBlock>
+          <StyledIconsBlock>
+            <AdditionalIcons />
+          </StyledIconsBlock>
+        </StyledSidebar>
+      </StyledAppContainer>
+    </>
   )
 })
 
-const StyledCountryImage = styled.img`
-  width: 23px;
+const StyledLinearProgress = styled(LinearProgress)`
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  height: 4px;
+  z-index: 1;
 `
 
-const StyledCountryTitle = styled.div`
+const StyledHeaderContainer = styled.div`
+  padding: 9px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+`
+const StyledHeaderTitle = styled.div`
+  color: #010101;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 10px;
+  letter-spacing: 0.24px;
+  min-width: 90px;
+  text-align: left;
+`
+
+const StyledCoursesTitle = styled.div`
   color: #0f3f62;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  text-wrap: nowrap;
+  width: 135.535px;
+  height: 33px;
+  flex-shrink: 0;
+  border-radius: 2px;
+  background: #ebf8ff;
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
 `
 
 const StyledSwapTitleContainer = styled.div`
@@ -220,9 +230,9 @@ const StyledSwapTitleContainer = styled.div`
 const StyledSwapContainer = styled.div`
   background: white;
   max-width: 100%;
-  border-radius: 20px;
+  border-radius: 7.5px;
   flex-shrink: 0;
-  min-width: 340px;
+  min-width: 240px;
   height: calc(42% - 20px);
   padding: 16px;
   box-sizing: border-box;
@@ -275,10 +285,11 @@ const StyledTransactionsHistoryTitleContainer = styled.div`
   align-items: center;
   align-content: center;
   justify-content: space-between;
+  margin-bottom: 8px;
 `
 
 export const StyledButton = styled(Button)`
-  border-radius: 12px;
+  border-radius: 5px;
   border: 0px solid var(--primary-6, #62d2ff);
   background: var(--primary-2, #bae7ff);
   box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.04);
@@ -340,31 +351,22 @@ const StyledProfileContainer = styled.div`
   justify-content: center;
 `
 
-const StyledBottomBlock = styled.div`
+const StyledTransactionsHistory = styled.div`
   flex: 3;
   width: 100%;
   background: white;
-  border-radius: 20px;
-  height: 300px;
-  overflow: hidden;
-`
-
-const StyledTransactionsHistory = styled.div`
-  flex: 6;
-  width: 100%;
-  background: white;
-  border-radius: 20px;
+  border-radius: 7.5px;
   height: fit-content;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   padding: 16px;
 `
 
 const StyledChartContainer = styled.div`
   width: 100%;
   background: white;
-  border-radius: 20px;
+  border-radius: 7.5px;
   height: fit-content;
   padding: 16px;
   box-sizing: border-box;
@@ -378,7 +380,7 @@ const StyledChartContainer = styled.div`
 const StyledBottomContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 18px;
+  gap: 6px;
   flex-wrap: wrap;
   height: fit-content;
 `
@@ -386,27 +388,21 @@ const StyledBottomContainer = styled.div`
 const StyledMainContentContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 18px;
+  gap: 6px;
   flex-wrap: nowrap;
   height: fit-content;
 `
 
-const StyledCountryTitleContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-`
 const StyledPreferredContent = styled.div`
   background: white;
-  flex: 1;
   width: 100%;
-  height: 120px;
-  border-radius: 20px;
+  height: 60px;
+  border-radius: 7.5px;
   padding: 13px 16px;
   box-sizing: border-box;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   gap: 16px;
 `
 
@@ -442,7 +438,7 @@ const StyledTop = styled.div`
   width: 100%;
   min-height: 60px;
   height: 60px;
-  border-radius: 20px;
+  border-radius: 7.5px;
   box-sizing: border-box;
   background: #fff;
   padding: 16px 20px;
@@ -457,7 +453,7 @@ const StyledFeed = styled.div`
   flex: 9;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 6px;
   overflow: auto;
   -ms-overflow-style: none; /* Internet Explorer 10+ */
   scrollbar-width: none; /* Firefox */
@@ -470,21 +466,21 @@ const StyleLeftSideContainer = styled.div`
   position: relative;
   flex: 4;
   max-width: 300px;
-  height: calc(100% - 20px);
+  height: calc(100% - 13px);
   flex-shrink: 0;
-  min-width: 340px;
+  min-width: 240px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
 `
 
 const StyledProfileInfo = styled.div`
   background: white;
   max-width: 100%;
-  border-radius: 20px;
+  border-radius: 7.5px;
   flex-shrink: 0;
-  min-width: 340px;
+  min-width: 240px;
   height: 58%;
   padding: 16px 25px;
   box-sizing: border-box;
@@ -499,7 +495,7 @@ const StyledSidebar = styled.div`
   flex: 1;
   max-width: 100px;
   height: calc(100% - 20px);
-  border-radius: 20px;
+  border-radius: 7.5px;
   flex-shrink: 0;
   min-width: 100px;
   display: flex;
@@ -518,7 +514,7 @@ const StyledSidebar = styled.div`
 const StyledAppContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 18px;
+  gap: 6px;
   position: relative;
   height: calc(100vh - 20px);
   padding: 20px 20px 0px 20px;

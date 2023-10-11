@@ -66,6 +66,6 @@ const StyledContainer = styled.div`
   flex-direction: column;
   flex: 3;
   box-sizing: border-box;
-  border-radius: 20px;
+  border-radius: 7.5px;
   border: 1px solid #f2f2f2;
 `

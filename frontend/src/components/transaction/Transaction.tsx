@@ -2,48 +2,68 @@ import styled from '@emotion/styled'
 import TrendingDownIcon from '@mui/icons-material/TrendingDown'
 import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 import { Typography } from '@mui/material'
+import { observer } from 'mobx-react-lite'
 import tokenSvg from '../../assets/token.svg'
+import { useStore } from '../../stores/rootStore'
 
-export const Transaction = ({
-  type,
-  amountToken,
-  tokenName,
-  amountFiat,
-  from,
-}: {
-  type: string
-  amountToken: number
-  tokenName: string
-  amountFiat: number
-  from: string
-}) => {
-  const text =
-    type === 'sell'
-      ? `Продажа ${amountToken} ${tokenName}`
-      : `Покупка ${amountToken} ${tokenName}`
-  const fiat =
-    type === 'sell'
-      ? `+ ${amountFiat.toLocaleString('ru-RU')} руб.`
-      : `- ${amountFiat.toLocaleString('ru-RU')} руб.`
-  const trend =
-    type === 'sell' ? <StyledTrendingUpIcon /> : <StyledTrendingDownIcon />
+export const Transaction = observer(
+  ({
+    type,
+    amountToken,
+    tokenName,
+    amountFiat,
+    from,
+  }: {
+    type: string
+    amountToken: number
+    tokenName: string
+    amountFiat: number
+    from: string
+  }) => {
+    const { userStore } = useStore()
 
-  return (
-    <StyledContainer>
-      <StyledBlock>
-        <img src={tokenSvg} />
-        <StyledTitleContainer>
-          <StyledTitle>{text}</StyledTitle>
-          <StyledSubTitle>{from}</StyledSubTitle>
-        </StyledTitleContainer>
-      </StyledBlock>
-      <StyledBlock>
-        <StyledTitle>{fiat}</StyledTitle>
-        {trend}
-      </StyledBlock>
-    </StyledContainer>
-  )
-}
+    if (type === 'transfer')
+      return (
+        <StyledContainer>
+          <StyledBlock>
+            <img src={tokenSvg} />
+            <StyledTitleContainer>
+              <StyledTitle>{`Отправка ${amountToken} ${tokenName}`}</StyledTitle>
+              <StyledSubTitle>{from}</StyledSubTitle>
+            </StyledTitleContainer>
+          </StyledBlock>
+        </StyledContainer>
+      )
+
+    const text =
+      type === 'sell'
+        ? `Продажа ${amountToken} ${tokenName}`
+        : `Покупка ${amountToken} ${tokenName}`
+    const fiat =
+      type === 'sell'
+        ? `+ ${amountFiat.toLocaleString('ru-RU')} руб.`
+        : `- ${amountFiat.toLocaleString('ru-RU')} руб.`
+
+    const trend =
+      type === 'sell' ? <StyledTrendingUpIcon /> : <StyledTrendingDownIcon />
+
+    return (
+      <StyledContainer>
+        <StyledBlock>
+          <img src={tokenSvg} />
+          <StyledTitleContainer>
+            <StyledTitle>{text}</StyledTitle>
+            <StyledSubTitle>{from}</StyledSubTitle>
+          </StyledTitleContainer>
+        </StyledBlock>
+        <StyledBlock>
+          <StyledTitle>{fiat}</StyledTitle>
+          {trend}
+        </StyledBlock>
+      </StyledContainer>
+    )
+  },
+)
 
 const StyledTrendingUpIcon = styled(TrendingUpIcon)`
   color: #54c1fb;
@@ -87,7 +107,7 @@ const StyledBlock = styled.div`
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: row;
-  border-radius: 12px;
+  border-radius: 7.5px;
   background: #fff;
   box-shadow: 0px 38px 72px 0px rgba(10, 4, 60, 0.06);
   align-items: center;
