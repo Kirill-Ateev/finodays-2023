@@ -230,7 +230,7 @@ const sellInvoices = [
 
 export class UserStore {
   countrySupply = mockCountriesSupply
-  goldPrice = 1900
+  goldPrice = 62
   currentBalance = 19_500_000
   tokenBalances: { [key: string]: number } = {
     ТТР: 180,
