@@ -85,7 +85,7 @@ export const AdditionalIcons = () => {
                   label="Описание"
                   placeholder="Дополнительная информация о товаре"
                   multiline={true}
-                  rows={3}
+                  rows={2}
                   variant="outlined"
                   value={description}
                   onChange={({ target: { value } }) => setDescription(value)}

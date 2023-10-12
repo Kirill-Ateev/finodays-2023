@@ -5,7 +5,6 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import {
   Alert,
   Box,
-  Button,
   DialogActions,
   DialogContentText,
   Drawer,
@@ -217,7 +216,11 @@ export const Balances = observer(() => {
                 />
               </DialogContentText>
               <DialogActions>
-                <Button
+                <StyledSellButton
+                  disabled={
+                    tokenBalances['ТТР'] < sellAmount ||
+                    tokenBalances['ТТР'] <= 0
+                  }
                   onClick={() => {
                     sellToken('ТТР', sellAmount)
                     handleOpen()
@@ -225,7 +228,7 @@ export const Balances = observer(() => {
                   }}
                 >
                   Продать
-                </Button>
+                </StyledSellButton>
               </DialogActions>
             </StyledDrawerContent>
           </CustomTabPanel>
@@ -243,6 +246,26 @@ export const Balances = observer(() => {
     </>
   )
 })
+
+const StyledSellButton = styled.div<{ disabled?: boolean }>`
+  width: 100%;
+  height: 46px;
+  text-align: center;
+  color: #fff;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  ${({ disabled }) =>
+    disabled
+      ? 'opacity: 0.5;  cursor: not-allowed; pointer-events: none;'
+      : 'opacity: 1;  cursor: pointer;'};
+`
 
 export const StyledHr = styled.hr`
   margin: 0;
