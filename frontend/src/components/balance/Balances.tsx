@@ -369,7 +369,7 @@ export const StyledCloseIcon = styled(CloseIcon)`
 `
 
 export const StyledDrawerContainer = styled.div`
-  width: 470px;
+  max-width: 470px;
   padding: 20px;
 `
 

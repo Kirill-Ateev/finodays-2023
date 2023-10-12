@@ -26,6 +26,8 @@ import { Order } from './components/transaction/Order'
 import { Transaction } from './components/transaction/Transaction'
 import { Chart } from './components/widgets/Chart'
 import { PieChart } from './components/widgets/PieChart'
+import { useMediaQuery } from './hooks/useMediaQuery'
+import { useWindowSize } from './hooks/useWindowSize'
 import { useStore } from './stores/rootStore'
 
 // Register the required components
@@ -40,6 +42,8 @@ echarts.use([
 
 export default observer(() => {
   const { userStore } = useStore()
+  const isTablet = useMediaQuery('(max-width: 768px)')
+  const { width, height } = useWindowSize()
 
   const {
     countrySupply,
@@ -57,8 +61,8 @@ export default observer(() => {
   return (
     <>
       {operationStatus === 'sending' && <StyledLinearProgress />}
-      <StyledAppContainer>
-        <StyleLeftSideContainer>
+      <StyledAppContainer isTablet={isTablet}>
+        <StyleLeftSideContainer isTablet={isTablet}>
           <StyledProfileInfo>
             <StyledProfileContainer>
               <Avatar sx={{ bgcolor: '#BFBFBF', width: 54, height: 54 }}>
@@ -99,13 +103,13 @@ export default observer(() => {
             </StyledPreferredContent>
           </StyledPreferredContentContainer>
           <StyledMainContentContainer>
-            <StyledChartContainer>
+            <StyledChartContainer isTablet={isTablet}>
               <Chart />
               <PieChart />
             </StyledChartContainer>
           </StyledMainContentContainer>
-          <StyledBottomContainer>
-            <StyledTransactionsHistory>
+          <StyledBottomContainer isTablet={isTablet}>
+            <StyledTransactionsHistory isTablet={isTablet} width={width}>
               <StyledTransactionsHistoryTitleContainer>
                 <StyledTransactionsHistoryTitle>
                   История транзакций
@@ -135,7 +139,7 @@ export default observer(() => {
                 },
               )}
             </StyledTransactionsHistory>
-            <StyledTransactionsHistory>
+            <StyledTransactionsHistory isTablet={isTablet} width={width}>
               <StyledTransactionsHistoryTitleContainer>
                 <StyledTransactionsHistoryTitle>
                   История заказов
@@ -156,7 +160,7 @@ export default observer(() => {
             </StyledTransactionsHistory>
           </StyledBottomContainer>
         </StyledFeed>
-        <StyledSidebar>
+        <StyledSidebar isTablet={isTablet}>
           <img height="35px" src={gce} />
           <StyledIconsBlock>
             <Icons />
@@ -351,9 +355,9 @@ const StyledProfileContainer = styled.div`
   justify-content: center;
 `
 
-const StyledTransactionsHistory = styled.div`
+const StyledTransactionsHistory = styled.div<any>`
   flex: 3;
-  width: 100%;
+  width: ${({ isTablet, width }) => (isTablet ? `${width - 73}px` : '100%')};
   background: white;
   border-radius: 7.5px;
   height: fit-content;
@@ -361,9 +365,10 @@ const StyledTransactionsHistory = styled.div`
   flex-direction: column;
   gap: 8px;
   padding: 16px;
+  ${({ isTablet }) => isTablet && 'overflow-y: auto;'};
 `
 
-const StyledChartContainer = styled.div`
+const StyledChartContainer = styled.div<any>`
   width: 100%;
   background: white;
   border-radius: 7.5px;
@@ -371,15 +376,15 @@ const StyledChartContainer = styled.div`
   padding: 16px;
   box-sizing: border-box;
   display: flex;
-  flex-direction: row;
+  flex-direction: ${({ isTablet }) => (isTablet ? 'column' : 'row')};
   align-items: center;
   flex-wrap: wrap;
   justify-content: space-between;
 `
 
-const StyledBottomContainer = styled.div`
+const StyledBottomContainer = styled.div<any>`
   display: flex;
-  flex-direction: row;
+  flex-direction: ${({ isTablet }) => (isTablet ? 'column' : 'row')};
   gap: 6px;
   flex-wrap: wrap;
   height: fit-content;
@@ -462,10 +467,10 @@ const StyledFeed = styled.div`
     display: none; /* Safari and Chrome */
   }
 `
-const StyleLeftSideContainer = styled.div`
+const StyleLeftSideContainer = styled.div<any>`
   position: relative;
   flex: 4;
-  max-width: 300px;
+  max-width: ${({ isTablet }) => (isTablet ? '100%' : '300px')};
   height: calc(100% - 13px);
   flex-shrink: 0;
   min-width: 240px;
@@ -490,10 +495,9 @@ const StyledProfileInfo = styled.div`
   justify-content: space-between;
 `
 
-const StyledSidebar = styled.div`
+const StyledSidebar = styled.div<any>`
   background: white;
   flex: 1;
-  max-width: 100px;
   height: calc(100% - 20px);
   border-radius: 7.5px;
   flex-shrink: 0;
@@ -505,18 +509,19 @@ const StyledSidebar = styled.div`
   align-items: center;
   align-content: center;
   justify-content: space-between;
+  ${({ isTablet }) => (isTablet ? 'flex-direction: row;' : 'max-width: 100px;')}
 
   svg {
     cursor: pointer;
   }
 `
 
-const StyledAppContainer = styled.div`
+const StyledAppContainer = styled.div<any>`
   display: flex;
-  flex-direction: row;
+  flex-direction: ${({ isTablet }) => (isTablet ? 'column' : 'row')};
   gap: 6px;
   position: relative;
-  height: calc(100vh - 20px);
+  height: ${({ isTablet }) => (isTablet ? '100%' : 'calc(100vh - 20px)')};
   padding: 20px 20px 0px 20px;
   background: #d7e4f3;
 `

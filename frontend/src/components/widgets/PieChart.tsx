@@ -1,7 +1,10 @@
 import styled from '@emotion/styled'
+import { useMediaQuery } from '@mui/material'
 import ReactECharts from 'echarts-for-react'
 
 export const PieChart = () => {
+  const isTablet = useMediaQuery('(max-width: 768px)')
+
   const options = {
     textStyle: {
       fontFamily: 'Roboto',
@@ -55,17 +58,18 @@ export const PieChart = () => {
     ],
   }
   return (
-    <StyledContainer>
+    <StyledContainer isTablet={isTablet}>
       <ReactECharts option={options} style={{ height: 315 }} />
     </StyledContainer>
   )
 }
 
-const StyledContainer = styled.div`
+const StyledContainer = styled.div<any>`
   display: flex;
   flex-direction: column;
   flex: 3;
   box-sizing: border-box;
   border-radius: 7.5px;
   border: 1px solid #f2f2f2;
+  ${({ isTablet }) => isTablet && 'width: 100%'};
 `
