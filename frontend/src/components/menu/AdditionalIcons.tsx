@@ -12,6 +12,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { useState } from 'react'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { useStore } from '../../stores/rootStore'
 import {
   CustomTabPanel,
@@ -35,7 +36,7 @@ export const AdditionalIcons = () => {
   const [price, setPrice] = useState('')
   const [currency, setCurrency] = useState('ТТР')
   const [wallet, setWallet] = useState('')
-
+  const isTablet = useMediaQuery('(max-width: 768px)')
   const [tab, setTab] = useState(0)
   const { userStore } = useStore()
 
@@ -59,7 +60,7 @@ export const AdditionalIcons = () => {
   return (
     <>
       <Drawer anchor="right" open={isOpen} onClose={() => setIsOpen(false)}>
-        <StyledDrawerContainer>
+        <StyledDrawerContainer isTablet={isTablet}>
           <StyledCloseIcon onClick={() => setIsOpen(false)} />
           <Tabs value={tab} onChange={handleChange}>
             <Tab label="Оформление инвойса" />

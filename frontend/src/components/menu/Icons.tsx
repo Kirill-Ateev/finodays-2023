@@ -6,6 +6,7 @@ import { Drawer, Tab, Tabs, Tooltip, Typography } from '@mui/material'
 import { observer } from 'mobx-react-lite'
 import { useState } from 'react'
 import noImg from '../../assets/noImg.png'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { useStore } from '../../stores/rootStore'
 import {
   CustomTabPanel,
@@ -20,6 +21,7 @@ export const Icons = observer(() => {
   const [orderIds, setOrderIds] = useState<string[]>([])
   const [tab, setTab] = useState(0)
   const { userStore } = useStore()
+  const isTablet = useMediaQuery('(max-width: 768px)')
 
   const {
     buyInvoices,
@@ -56,7 +58,7 @@ export const Icons = observer(() => {
   return (
     <>
       <Drawer anchor="right" open={isOpen} onClose={handleClose}>
-        <StyledDrawerContainer>
+        <StyledDrawerContainer isTablet={isTablet}>
           <StyledCloseIcon onClick={handleClose} />
           <Tabs value={tab} onChange={handleChange}>
             <Tab label="Заявки на оплату" />

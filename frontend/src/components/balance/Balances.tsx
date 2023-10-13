@@ -26,6 +26,7 @@ import {
 import cbLogo from '../../assets/cb.png'
 import sbpLogo from '../../assets/sbp.png'
 import tokenSvg from '../../assets/token.svg'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { useStore } from '../../stores/rootStore'
 import { TokenBalance } from './TokenBalance'
 
@@ -55,7 +56,7 @@ export const Balances = observer(() => {
   const [buyAmount, setBuyAmount] = useState(100)
   const [sellAmount, setSellAmount] = useState(0)
   const [tab, setTab] = useState(0)
-
+  const isTablet = useMediaQuery('(max-width: 768px)')
   const { userStore } = useStore()
 
   const {
@@ -99,7 +100,7 @@ export const Balances = observer(() => {
         Купить / Продать ТТ
       </StyledButton>
       <Drawer anchor="right" open={isOpen} onClose={() => setIsOpen(false)}>
-        <StyledDrawerContainer>
+        <StyledDrawerContainer isTablet={isTablet}>
           <StyledCloseIcon onClick={() => setIsOpen(false)} />
           <Tabs value={tab} onChange={handleChange}>
             <Tab label="Покупка" />
@@ -368,9 +369,10 @@ export const StyledCloseIcon = styled(CloseIcon)`
   z-index: 2;
 `
 
-export const StyledDrawerContainer = styled.div`
+export const StyledDrawerContainer = styled.div<any>`
   max-width: 470px;
   padding: 20px;
+  ${({ isTablet }) => !isTablet && 'width: 470px'};
 `
 
 const StyledBalanceContainer = styled.div`
