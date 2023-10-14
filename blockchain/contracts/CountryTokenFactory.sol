@@ -3,11 +3,16 @@ pragma solidity 0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+
 // Оракул для цены золота
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+interface OracleInterface {
+    function getPriceGold() external view returns (uint256);
+}
 
 contract CountryTokenFactory is Ownable {
-    AggregatorV3Interface internal dataFeed;
+    // Внешний оракул
+    OracleInterface public GoldOracleInterface;
+
     // Все кошельки участников
     address[] private participants;
 
@@ -33,11 +38,11 @@ contract CountryTokenFactory is Ownable {
     event CountryRemovalProposal(string country);
     event ConfirmationReceived(string country, address participant);
 
-    constructor() {
-        // Оракул для получения цены на золото в USD
-        dataFeed = AggregatorV3Interface(
-            0xC5981F461d74c46eB4b0CF3f4Ec79f025573B0Ea
-        );
+    constructor(
+        address initialOwner,
+        address _addressGoldOracle
+    ) Ownable(initialOwner) {
+        GoldOracleInterface = OracleInterface(_addressGoldOracle);
     }
 
     // Модификатор "только для участников"
@@ -53,8 +58,9 @@ contract CountryTokenFactory is Ownable {
         _;
     }
 
-    function getCurrentGoldPrice() public view returns (int) {
-        (, int answer, , , ) = dataFeed.latestRoundData();
+    function getCurrentGoldPrice() public view returns (uint256) {
+        // Получаем текущую стоимость грамма золота
+        uint256 answer = GoldOracleInterface.getPriceGold();
         return answer;
     }
 
@@ -169,15 +175,27 @@ contract CountryTokenFactory is Ownable {
 
     //Функция проведения клиринга вистов
     function clearingVist() external onlyParticipant {
-        for(uint i = 0 ; i<participants.length; i++) {
-            address adressTokenA=tokenAddress[countryWallets[participants[i]]]; // Получение токена страны А
-            for(uint j = 0 ; j<participants.length; j++) {
-                address adressTokenB=tokenAddress[countryWallets[participants[j]]]; // Получение токена страны B
-                if(i!=j){
-                    uint currentAmountTokenA=IERC20(adressTokenA).balanceOf(participants[j]); // Получение количества токенов B у страны А
-                    uint currentAmountTokenB=IERC20(adressTokenB).balanceOf(participants[i]); // Получение количества токенов A у страны B
-                    if ((currentAmountTokenA==0) || (currentAmountTokenB==0)){ // Проверка на ненулевые балансы для проведения операции
-                        if (currentAmountTokenA>=currentAmountTokenB){  // Полное погашение минимальной стоимости из двух балансов
+        for (uint i = 0; i < participants.length; i++) {
+            address adressTokenA = tokenAddress[
+                countryWallets[participants[i]]
+            ]; // Получение токена страны А
+            for (uint j = 0; j < participants.length; j++) {
+                address adressTokenB = tokenAddress[
+                    countryWallets[participants[j]]
+                ]; // Получение токена страны B
+                if (i != j) {
+                    uint currentAmountTokenA = IERC20(adressTokenA).balanceOf(
+                        participants[j]
+                    ); // Получение количества токенов B у страны А
+                    uint currentAmountTokenB = IERC20(adressTokenB).balanceOf(
+                        participants[i]
+                    ); // Получение количества токенов A у страны B
+                    if (
+                        (currentAmountTokenA == 0) || (currentAmountTokenB == 0)
+                    ) {
+                        // Проверка на ненулевые балансы для проведения операции
+                        if (currentAmountTokenA >= currentAmountTokenB) {
+                            // Полное погашение минимальной стоимости из двух балансов
                             CountryToken tokenA = CountryToken(adressTokenA);
                             tokenA.burn(currentAmountTokenB);
                             CountryToken tokenB = CountryToken(adressTokenB);
@@ -193,7 +211,6 @@ contract CountryTokenFactory is Ownable {
             }
         }
     }
-    
 }
 
 // ERC-20 торговый токен страны
@@ -222,7 +239,7 @@ contract CountryToken is ERC20, Ownable {
         string memory symbol,
         string memory country,
         address countryWallet
-    ) ERC20(name, symbol) {
+    ) Ownable(countryWallet) ERC20(name, symbol) {
         countryOwner = country;
         transferOwnership(countryWallet);
     }

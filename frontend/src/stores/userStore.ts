@@ -1,5 +1,7 @@
+import { Contract, ethers } from 'ethers'
 import { makeAutoObservable } from 'mobx'
 import { PlateProps } from '../components/marquee/Plate'
+import { abi } from '../utils/constants'
 
 const mockTransactions = [
   {
@@ -217,17 +219,6 @@ const sellInvoices = [
   },
 ]
 
-// const provider = new ethers.JsonRpcProvider(
-//   'https://eth-sepolia.g.alchemy.com/v2/rHtEMynbF8ZihFUJVC09QzKtftiX_s89',
-// )
-// const countryTokenFactoryContractAddress =
-//   '0x18247a2b97bece98e682e49631535b06477ea4da'
-// const contract = new ethers.Contract(
-//   countryTokenFactoryContractAddress,
-//   abi,
-//   provider,
-// )
-
 export class UserStore {
   countrySupply = mockCountriesSupply
   goldPrice = 62
@@ -251,8 +242,19 @@ export class UserStore {
   // Фетч стоимости золота из смарт-контракта оракула в USD
   fetchGoldPrice = async () => {
     try {
-      // const goldPrice = await contract.getCurrentGoldPrice()
-      // this.goldPrice = parseInt(goldPrice.toString()) / 100000000
+      const provider = new ethers.JsonRpcProvider('http://51.250.29.186:8545')
+      const blocks2 = await provider.getBlockNumber()
+      console.log(blocks2)
+
+      const contract = new Contract(
+        '0x0dB9bb97902be823879762C345B89124767DF116',
+        abi,
+        provider,
+      )
+
+      const goldPrice = await contract.getCurrentGoldPrice()
+
+      if (goldPrice) this.goldPrice = parseInt(goldPrice)
       console.log(`Current Gold Price: ${this.goldPrice}`)
     } catch (error) {
       console.error('Error fetching gold price:', error)

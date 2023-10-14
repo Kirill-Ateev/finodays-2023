@@ -1,8 +1,41 @@
 export const abi = [
   {
-    inputs: [],
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'initialOwner',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: '_addressGoldOracle',
+        type: 'address',
+      },
+    ],
     stateMutability: 'nonpayable',
     type: 'constructor',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+    ],
+    name: 'OwnableInvalidOwner',
+    type: 'error',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'OwnableUnauthorizedAccount',
+    type: 'error',
   },
   {
     anonymous: false,
@@ -100,6 +133,19 @@ export const abi = [
     type: 'event',
   },
   {
+    inputs: [],
+    name: 'GoldOracleInterface',
+    outputs: [
+      {
+        internalType: 'contract OracleInterface',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [
       {
         internalType: 'string',
@@ -184,9 +230,9 @@ export const abi = [
     name: 'getCurrentGoldPrice',
     outputs: [
       {
-        internalType: 'int256',
+        internalType: 'uint256',
         name: '',
-        type: 'int256',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',
