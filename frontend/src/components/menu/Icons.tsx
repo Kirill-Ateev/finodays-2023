@@ -1,11 +1,16 @@
 import styled from '@emotion/styled'
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import SearchIcon from '@mui/icons-material/Search'
-import { Drawer, Tab, Tabs, Tooltip, Typography } from '@mui/material'
+import { Drawer, Modal, Tab, Tabs, Tooltip, Typography } from '@mui/material'
+import FsLightbox from 'fslightbox-react'
 import { observer } from 'mobx-react-lite'
 import { useState } from 'react'
 import noImg from '../../assets/noImg.png'
+import pageOne from '../../assets/page1.jpg'
+import pageTwo from '../../assets/page2.jpg'
 import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { useStore } from '../../stores/rootStore'
 import {
@@ -21,6 +26,8 @@ export const Icons = observer(() => {
   const [orderIds, setOrderIds] = useState<string[]>([])
   const [tab, setTab] = useState(0)
   const { userStore } = useStore()
+  const [open, setOpen] = useState(false)
+  const [page, setPage] = useState(1)
   const isTablet = useMediaQuery('(max-width: 768px)')
 
   const {
@@ -33,6 +40,13 @@ export const Icons = observer(() => {
     selectProduct,
     clearSelectedProduct,
   } = userStore
+
+  const handleOpen = () => {
+    setOpen(true)
+  }
+  const handleModalClose = () => {
+    setOpen(false)
+  }
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue)
@@ -266,6 +280,12 @@ export const Icons = observer(() => {
           </CustomTabPanel>
         </StyledDrawerContainer>
       </Drawer>
+      <FsLightbox
+        toggler={open}
+        sources={[<img src={pageOne} />, <img src={pageTwo} />]}
+        key={page}
+        // onClose={() => setOpen(false)}
+      />
       <Tooltip title="Заказы">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -327,35 +347,11 @@ export const Icons = observer(() => {
           }}
         />
       </Tooltip>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="25"
-        viewBox="0 0 24 25"
-        fill="none"
-      >
-        <path
-          d="M19.7699 14.8622V17.7028C19.7699 18.3457 19.5065 18.9622 19.0377 19.4167C18.5689 19.8713 17.933 20.1266 17.2699 20.1266H5.67993C5.01689 20.1266 4.38101 19.8713 3.91216 19.4167C3.44332 18.9622 3.17993 18.3457 3.17993 17.7028V7.40663C3.17993 6.7638 3.44332 6.14731 3.91216 5.69276C4.38101 5.23821 5.01689 4.98285 5.67993 4.98285H17.2699C17.933 4.98285 18.5689 5.23821 19.0377 5.69276C19.5065 6.14731 19.7699 6.7638 19.7699 7.40663V10.2473"
-          stroke="#A5B4CB"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M14.8701 10.2473H19.8701C20.1353 10.2473 20.3897 10.3494 20.5772 10.5313C20.7648 10.7131 20.8701 10.9597 20.8701 11.2168V13.8927C20.8701 14.1498 20.7648 14.3964 20.5772 14.5782C20.3897 14.76 20.1353 14.8622 19.8701 14.8622H14.8701C14.3397 14.8622 13.831 14.6579 13.4559 14.2942C13.0808 13.9306 12.8701 13.4374 12.8701 12.9232V12.1863C12.8701 11.9317 12.9218 11.6795 13.0224 11.4443C13.1229 11.209 13.2702 10.9953 13.4559 10.8152C13.6416 10.6352 13.8621 10.4923 14.1048 10.3949C14.3474 10.2975 14.6075 10.2473 14.8701 10.2473V10.2473Z"
-          stroke="#A5B4CB"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M15.5601 12.5547H16.3001"
-          stroke="#A5B4CB"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
+
+      <Tooltip title="Архитектура системы">
+        <StyledQuestionMarkIcon onClick={() => setOpen(!open)} />
+      </Tooltip>
+
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -374,6 +370,30 @@ export const Icons = observer(() => {
     </>
   )
 })
+
+const StyledImg = styled.img`
+  max-width: 100%;
+`
+
+const StyledKeyboardArrowRightIcon = styled(KeyboardArrowRightIcon)`
+  position: absolute;
+  display: flex;
+  z-index: 3;
+`
+const StyledModalContainer = styled.div`
+  position: relative;
+  height: 90%;
+  max-width: 100vh;
+`
+
+const StyledModal = styled(Modal)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+const StyledQuestionMarkIcon = styled(QuestionMarkIcon)`
+  color: rgb(83, 95, 104);
+`
 const StyledContentBlock = styled.div`
   display: flex;
   flex-direction: column;
