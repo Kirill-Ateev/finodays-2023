@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet'
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import ListAltIcon from '@mui/icons-material/ListAlt'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import SearchIcon from '@mui/icons-material/Search'
-import { Drawer, Modal, Tab, Tabs, Tooltip, Typography } from '@mui/material'
+import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt'
+import { Drawer, Tab, Tabs, Tooltip, Typography } from '@mui/material'
 import FsLightbox from 'fslightbox-react'
 import { observer } from 'mobx-react-lite'
 import { useState } from 'react'
@@ -284,30 +285,12 @@ export const Icons = observer(() => {
         toggler={open}
         sources={[<img src={pageOne} />, <img src={pageTwo} />]}
         key={page}
-        // onClose={() => setOpen(false)}
       />
       <Tooltip title="Заказы">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          onClick={() => setIsOpen(value => !value)}
-        >
-          <path
-            d="M14.4968 2.96559C14.8982 2.96559 15.2236 3.28008 15.2236 3.66801C15.2236 4.02362 14.9502 4.31751 14.5954 4.36402L14.4968 4.37043H7.45429C5.07567 4.37043 3.54548 5.89283 3.45752 8.26762L3.45352 8.48584V16.0555C3.45352 18.4929 4.89102 20.0677 7.2384 20.1582L7.45429 20.1623H15.7918C18.1725 20.1623 19.7007 18.6458 19.7886 16.2735L19.7926 16.0555V9.46312C19.7926 9.07518 20.1179 8.7607 20.5193 8.7607C20.8872 8.7607 21.1913 9.02495 21.2394 9.36781L21.2461 9.46312V16.0555C21.2461 19.2308 19.1721 21.4615 16.0188 21.5635L15.7918 21.5672H7.45429C4.2269 21.5672 2.10063 19.4223 2.00348 16.2815L2 16.0555V8.48584C2 5.30904 4.07521 3.07161 7.22732 2.96926L7.45429 2.96559H14.4968ZM16.5473 9.36222C16.8358 9.57822 16.9099 9.96249 16.7363 10.261L16.6767 10.3477L13.8384 13.8882C13.6139 14.1683 13.2139 14.2391 12.9047 14.0687L12.815 14.0103L10.0835 11.9368L7.63115 15.0179C7.40864 15.2974 7.01131 15.3703 6.7019 15.2035L6.61198 15.1463C6.32279 14.9312 6.24735 14.5472 6.41992 14.2481L6.47916 14.1612L9.37954 10.5178C9.60364 10.2364 10.0046 10.1647 10.3145 10.3353L10.4045 10.3938L13.1368 12.4688L15.5277 9.48725C15.7736 9.18059 16.2301 9.12461 16.5473 9.36222ZM19.4106 2.17691C20.8407 2.17691 22 3.2974 22 4.67959C22 6.06178 20.8407 7.18226 19.4106 7.18226C17.9805 7.18226 16.8212 6.06178 16.8212 4.67959C16.8212 3.2974 17.9805 2.17691 19.4106 2.17691ZM19.4106 3.58175C18.7833 3.58175 18.2747 4.07327 18.2747 4.67959C18.2747 5.2859 18.7833 5.77742 19.4106 5.77742C20.0379 5.77742 20.5465 5.2859 20.5465 4.67959C20.5465 4.07327 20.0379 3.58175 19.4106 3.58175Z"
-            fill="#0F3F62"
-          />
-        </svg>
+        <StyledListAltIcon onClick={() => setIsOpen(value => !value)} />
       </Tooltip>
       <Tooltip title="Мониторинг">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="25"
-          viewBox="0 0 24 25"
-          fill="none"
+        <StyledSignalCellularAltIcon
           onClick={() => {
             window
               ?.open(
@@ -316,29 +299,7 @@ export const Icons = observer(() => {
               )
               .focus()
           }}
-        >
-          <path
-            d="M7 13.8486V18.1629"
-            stroke="#0F3F62"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M12.3899 10.7171V18.1629"
-            stroke="#0F3F62"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M17.78 7.58554V18.1629"
-            stroke="#0F3F62"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
+        />
       </Tooltip>
       <Tooltip title="Обозреватель блоков">
         <StyledSearchIcon
@@ -371,29 +332,19 @@ export const Icons = observer(() => {
   )
 })
 
-const StyledImg = styled.img`
-  max-width: 100%;
-`
-
-const StyledKeyboardArrowRightIcon = styled(KeyboardArrowRightIcon)`
-  position: absolute;
-  display: flex;
-  z-index: 3;
-`
-const StyledModalContainer = styled.div`
-  position: relative;
-  height: 90%;
-  max-width: 100vh;
-`
-
-const StyledModal = styled(Modal)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
 const StyledQuestionMarkIcon = styled(QuestionMarkIcon)`
-  color: rgb(83, 95, 104);
+  color: #394e5d;
 `
+const StyledSearchIcon = styled(SearchIcon)`
+  color: #394e5d;
+`
+const StyledListAltIcon = styled(ListAltIcon)`
+  color: #394e5d;
+`
+const StyledSignalCellularAltIcon = styled(SignalCellularAltIcon)`
+  color: #394e5d;
+`
+
 const StyledContentBlock = styled.div`
   display: flex;
   flex-direction: column;
@@ -401,10 +352,6 @@ const StyledContentBlock = styled.div`
 `
 const StyledOpenInNewIcon = styled(OpenInNewIcon)`
   z-index: 9;
-`
-
-const StyledSearchIcon = styled(SearchIcon)`
-  color: #0f3f62;
 `
 
 const StyledListContainer = styled.div`
