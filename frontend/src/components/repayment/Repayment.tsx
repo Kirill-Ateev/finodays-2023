@@ -101,7 +101,7 @@ export const Repayment = () => {
                           </StyledColumn>
                         </StyledRow>
                         <Typography>
-                          {Math.round(amount * coefficient)} {postfix}
+                          {(amount * coefficient).toFixed(2)} {postfix}
                         </Typography>
                       </StyledItemContent>
                     )
@@ -112,7 +112,8 @@ export const Repayment = () => {
                 disabled={
                   amount <= 0 ||
                   tokenBalances['ТТР'] <= amount ||
-                  operationStatus === 'sending'
+                  operationStatus === 'sending' ||
+                  !selectedId
                 }
                 onClick={() => {
                   redeemToken('ТТР', amount, selectedId)
