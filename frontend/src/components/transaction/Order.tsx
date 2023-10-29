@@ -37,7 +37,7 @@ export const Order = ({
   currency,
 }: OrderProps) => {
   return (
-    <StyledContainer>
+    <StyledContainer isHighlighted={status === 'Заявлен к погашению'}>
       <StyledText>{orderId}</StyledText>
       <StyledText>{status}</StyledText>
       <StyledProgressContainer>
@@ -50,7 +50,7 @@ export const Order = ({
 const StyledProgressContainer = styled.div`
   min-width: 90px;
 `
-const StyledContainer = styled.div`
+const StyledContainer = styled.div<{ isHighlighted: boolean }>`
   padding: 9px;
   width: 100%;
   display: flex;
@@ -63,6 +63,7 @@ const StyledContainer = styled.div`
   background: #fff;
   box-shadow: 0px 38px 72px 0px rgba(10, 4, 60, 0.06);
   cursor: pointer;
+  ${({ isHighlighted }) => isHighlighted && 'outline: 0.5px solid #1976d2'}
 `
 const StyledText = styled.div`
   color: #010101;

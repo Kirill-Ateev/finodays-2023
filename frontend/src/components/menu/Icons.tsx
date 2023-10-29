@@ -11,7 +11,7 @@ import { observer } from 'mobx-react-lite'
 import { useState } from 'react'
 import noImg from '../../assets/noImg.png'
 import pageOne from '../../assets/page1.jpg'
-import pageTwo from '../../assets/page2.jpg'
+import pageTwo from '../../assets/page2.png'
 import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { useStore } from '../../stores/rootStore'
 import {
@@ -21,6 +21,7 @@ import {
   StyledHr,
   StyledText,
 } from '../balance/Balances'
+import { Repayment } from '../repayment/Repayment'
 
 export const Icons = observer(() => {
   const [isOpen, setIsOpen] = useState(false)
@@ -289,6 +290,7 @@ export const Icons = observer(() => {
       <Tooltip title="Заказы">
         <StyledListAltIcon onClick={() => setIsOpen(value => !value)} />
       </Tooltip>
+
       <Tooltip title="Мониторинг">
         <StyledSignalCellularAltIcon
           onClick={() => {
@@ -312,7 +314,7 @@ export const Icons = observer(() => {
       <Tooltip title="Архитектура системы">
         <StyledQuestionMarkIcon onClick={() => setOpen(!open)} />
       </Tooltip>
-
+      <Repayment />
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"

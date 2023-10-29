@@ -1,5 +1,10 @@
 import { Contract, ethers } from 'ethers'
 import { makeAutoObservable } from 'mobx'
+import { default as copperIcon } from '../assets/goods/copper.svg'
+import gasIcon from '../assets/goods/gas.svg'
+import goldIcon from '../assets/goods/gold.svg'
+import oilIcon from '../assets/goods/oil.svg'
+import wheatIcon from '../assets/goods/wheat.svg'
 import { PlateProps } from '../components/marquee/Plate'
 import { abi } from '../utils/constants'
 
@@ -219,6 +224,44 @@ const sellInvoices = [
   },
 ]
 
+const nomenclatureGoods = [
+  {
+    id: 'NEFTVAM500U30',
+    title: 'Нефть сырая',
+    icon: oilIcon,
+    coefficient: 0.095,
+    postfix: 'т.',
+  },
+  {
+    id: 'GASBLKS011U2D',
+    title: 'Газ природный',
+    icon: gasIcon,
+    coefficient: 1480,
+    postfix: 'куб. м.',
+  },
+  {
+    id: 'COOPRUS073U29',
+    title: 'Медь',
+    icon: copperIcon,
+    coefficient: 0.0082,
+    postfix: 'т.',
+  },
+  {
+    id: 'WHEATRUS0143U',
+    title: 'Пшеница',
+    icon: wheatIcon,
+    coefficient: 0.113,
+    postfix: 'т.',
+  },
+  {
+    id: 'GOLDRUS3U0804',
+    title: 'Золото',
+    icon: goldIcon,
+    coefficient: 0.001,
+    postfix: 'кг.',
+  },
+]
+
 export class UserStore {
   countrySupply = mockCountriesSupply
   goldPrice = 62
@@ -234,6 +277,7 @@ export class UserStore {
   buyInvoices = buyInvoices
   sellInvoices = sellInvoices
   selectedProduct = undefined
+  nomenclatureGoods = nomenclatureGoods
 
   constructor() {
     makeAutoObservable(this)
@@ -340,6 +384,41 @@ export class UserStore {
           sum: amount,
           currency: 'ТТР',
           orderIds: orderIds,
+        },
+        ...this.ordersHistory,
+      ]
+      setTimeout(() => {
+        this.operationStatus = 'waiting'
+      }, 6000)
+    }, 2000)
+  }
+
+  redeemToken = async (key: string, amount: number, productId: string) => {
+    this.operationStatus = 'sending'
+    setTimeout(() => {
+      this.tokenBalances[key] = this.tokenBalances[key] - Number(amount)
+      this.operationStatus = 'success'
+      const product = this.nomenclatureGoods.find(({ id }) => id === productId)
+
+      this.transactionHistory = [
+        {
+          type: 'repayment',
+          amountToken: Number(amount),
+          tokenName: key,
+          amountFiat: Number(amount) * this.goldPrice * 95,
+          from: 'Главный счет',
+        },
+        ...this.transactionHistory,
+      ]
+
+      this.ordersHistory = [
+        {
+          orderId: (Math.random() + 1).toString(36).substring(2, 16),
+          status: 'Заявлен к погашению',
+          progress: 15,
+          sum: amount,
+          currency: 'ТТР',
+          orderIds: [productId],
         },
         ...this.ordersHistory,
       ]

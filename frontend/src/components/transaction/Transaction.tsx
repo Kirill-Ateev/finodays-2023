@@ -35,6 +35,19 @@ export const Transaction = observer(
         </StyledContainer>
       )
 
+    if (type === 'repayment')
+      return (
+        <StyledContainer>
+          <StyledBlock>
+            <img src={tokenSvg} />
+            <StyledTitleContainer>
+              <StyledTitle>{`Погашение ${amountToken} ${tokenName}`}</StyledTitle>
+              <StyledSubTitle>{from}</StyledSubTitle>
+            </StyledTitleContainer>
+          </StyledBlock>
+        </StyledContainer>
+      )
+
     const text =
       type === 'sell'
         ? `Продажа ${amountToken} ${tokenName}`

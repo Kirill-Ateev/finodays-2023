@@ -181,7 +181,7 @@ export const Balances = observer(() => {
                 <StyledRow>
                   <img src={cbLogo} height="40px" />
                   <StyledContentColumn>
-                    <Typography>Банк России</Typography>
+                    <Typography>ОТП РФ</Typography>
                   </StyledContentColumn>
                 </StyledRow>
                 <StyledContentColumn>
