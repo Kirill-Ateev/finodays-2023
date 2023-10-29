@@ -279,6 +279,8 @@ export class UserStore {
   selectedProduct = undefined
   nomenclatureGoods = nomenclatureGoods
 
+  company = 'Russia'
+
   constructor() {
     makeAutoObservable(this)
   }
@@ -450,5 +452,9 @@ export class UserStore {
 
   clearSelectedProduct = () => {
     this.selectedProduct = undefined
+  }
+
+  switchCompany = () => {
+    this.company = this.company === 'Russia' ? 'China' : 'Russia'
   }
 }

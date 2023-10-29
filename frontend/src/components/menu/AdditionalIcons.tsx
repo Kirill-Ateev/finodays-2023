@@ -40,7 +40,7 @@ export const AdditionalIcons = () => {
   const [tab, setTab] = useState(0)
   const { userStore } = useStore()
 
-  const { sendInvoice, operationStatus } = userStore
+  const { sendInvoice, operationStatus, switchCompany } = userStore
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue)
@@ -218,6 +218,7 @@ export const AdditionalIcons = () => {
         viewBox="0 0 16 18"
         fill="none"
         style={{ marginLeft: '10px' }}
+        onClick={switchCompany}
       >
         <path
           d="M7 1.52441H3C1.89543 1.52441 1 2.41984 1 3.52441V15.0366C1 16.1412 1.89543 17.0366 3 17.0366H7"

@@ -16,6 +16,7 @@ import { observer } from 'mobx-react-lite'
 import { useEffect } from 'react'
 import Marquee from 'react-fast-marquee'
 import gce from '../public/icon.svg'
+import china from './assets/china.png'
 import swapImage from './assets/swap.png'
 import { Balances } from './components/balance/Balances'
 import { Plate } from './components/marquee/Plate'
@@ -52,7 +53,9 @@ export default observer(() => {
     fetchGoldPrice,
     ordersHistory,
     operationStatus,
+    company,
   } = userStore
+  const isRussia = company === 'Russia'
 
   useEffect(() => {
     fetchGoldPrice()
@@ -61,18 +64,25 @@ export default observer(() => {
   return (
     <>
       {operationStatus === 'sending' && <StyledLinearProgress />}
-      <StyledAppContainer isTablet={isTablet}>
+      <StyledAppContainer isTablet={isTablet} isRussia={isRussia}>
         <StyleLeftSideContainer isTablet={isTablet}>
           <StyledProfileInfo>
             <StyledProfileContainer>
-              <Avatar sx={{ bgcolor: '#BFBFBF', width: 54, height: 54 }}>
+              <Avatar
+                sx={{ bgcolor: '#BFBFBF', width: 54, height: 54 }}
+                src={isRussia ? undefined : china}
+              >
                 <PersonOutlineIcon />
               </Avatar>
               <StyledProfileTextContainer>
                 <StyledProfileTitle>
-                  ООО “Российский импортер”
+                  {isRussia
+                    ? 'ООО “Российский импортер”'
+                    : 'JSC "China Export"'}
                 </StyledProfileTitle>
-                <StyledProfileSubtext>Кошелек 0x66...c7e5</StyledProfileSubtext>
+                <StyledProfileSubtext>
+                  Кошелек {isRussia ? '0x66...c7e5' : '0x31...fx8n"'}{' '}
+                </StyledProfileSubtext>
               </StyledProfileTextContainer>
             </StyledProfileContainer>
             <Balances />
@@ -353,6 +363,7 @@ const StyledProfileContainer = styled.div`
   gap: 15px;
   align-items: center;
   justify-content: center;
+  justify-content: flex-start;
 `
 
 const StyledTransactionsHistory = styled.div<any>`
@@ -523,5 +534,5 @@ const StyledAppContainer = styled.div<any>`
   position: relative;
   height: ${({ isTablet }) => (isTablet ? '100%' : 'calc(100vh - 20px)')};
   padding: 20px 20px 0px 20px;
-  background: #d7e4f3;
+  background: ${({ isRussia }) => (isRussia ? '#d7e4f3' : '#9dbee3')};
 `
