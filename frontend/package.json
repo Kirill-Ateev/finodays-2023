@@ -23,7 +23,7 @@
     "echarts-for-react": "^3.0.2",
     "ethers": "^6.8.0",
     "events": "^3.3.0",
-    "express": "^4.18.2",
+    "express": "^4.20.0",
     "fslightbox-react": "^1.7.6",
     "mobx": "^6.10.0",
     "mobx-react-lite": "^4.0.3",
@@ -48,7 +48,7 @@
     "eslint-plugin-react-refresh": "^0.4.3",
     "surge": "^0.23.1",
     "typescript": "^5.0.2",
-    "vite": "^4.4.5",
+    "vite": "^4.5.10",
     "vitest": "^0.34.3"
   }
 }
